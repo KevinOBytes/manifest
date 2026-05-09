@@ -23,7 +23,13 @@ const fs = require("fs") as {
 const path = require("path") as { join: (...parts: string[]) => string };
 
 function collect(parentDir: string, markerFile: string): string[] {
-  const entries = fs.readdirSync(parentDir, { withFileTypes: true });
+  let entries: DirEntryLike[];
+  try {
+    entries = fs.readdirSync(parentDir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+
   return entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => path.join(parentDir, entry.name))
