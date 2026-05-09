@@ -6,17 +6,17 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class ArtifactCatalog:
-    souls: list[str]
+    soul: list[str]
     skills: list[str]
 
 
 def discover_artifacts(repo_root: Path) -> ArtifactCatalog:
-    souls_root = repo_root / "souls"
+    soul_root = repo_root / "soul"
     skills_root = repo_root / ".agents" / "skills"
 
-    souls = sorted(
+    soul = sorted(
         str(path.parent.relative_to(repo_root))
-        for path in souls_root.glob("*/SOULS.md")
+        for path in soul_root.glob("*/SOUL.md")
         if path.is_file()
     )
 
@@ -26,15 +26,15 @@ def discover_artifacts(repo_root: Path) -> ArtifactCatalog:
         if path.is_file()
     )
 
-    return ArtifactCatalog(souls=souls, skills=skills)
+    return ArtifactCatalog(soul=soul, skills=skills)
 
 
 if __name__ == "__main__":
     # Script lives in <repo>/python, so parent[1] is repository root.
     catalog = discover_artifacts(Path(__file__).resolve().parents[1])
-    print("souls:")
-    for soul in catalog.souls:
-        print(f"- {soul}")
+    print("soul:")
+    for s in catalog.soul:
+        print(f"- {s}")
     print("skills:")
     for skill in catalog.skills:
         print(f"- {skill}")

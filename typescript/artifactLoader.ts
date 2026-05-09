@@ -7,7 +7,7 @@ declare const module: ModuleLike;
 declare const process: ProcessLike;
 
 export type ArtifactCatalog = {
-  souls: string[];
+  soul: string[];
   skills: string[];
 };
 
@@ -40,15 +40,15 @@ function collect(parentDir: string, markerFile: string): string[] {
 
 export function discoverArtifacts(repoRoot: string): ArtifactCatalog {
   return {
-    souls: collect(path.join(repoRoot, "souls"), "SOULS.md").sort(),
+    soul: collect(path.join(repoRoot, "soul"), "SOUL.md").sort(),
     skills: collect(path.join(repoRoot, ".agents", "skills"), "SKILL.md").sort(),
   };
 }
 
 if (require.main === module) {
   const catalog = discoverArtifacts(process.cwd());
-  console.log("souls:");
-  for (const soul of catalog.souls) console.log(`- ${soul}`);
+  console.log("soul:");
+  for (const s of catalog.soul) console.log(`- ${s}`);
   console.log("skills:");
   for (const skill of catalog.skills) console.log(`- ${skill}`);
 }

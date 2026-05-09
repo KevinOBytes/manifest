@@ -7,7 +7,7 @@ This repository is a production-ready library of reusable agent artifacts:
 - **Loaders** in Python and TypeScript for programmatic discovery
 
 ## Artifact Contract
-1. `souls/<role>/SOULS.md` defines one role persona.
+1. `soul/<role>/SOUL.md` defines one role persona.
 2. `.agents/skills/<skill>/SKILL.md` defines one portable skill.
 3. Artifacts are plain Markdown and should be deterministic, auditable, and composable.
 4. Skills should avoid hidden chain-of-thought and provide concise, actionable outputs.
