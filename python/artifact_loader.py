@@ -15,13 +15,13 @@ def discover_artifacts(repo_root: Path) -> ArtifactCatalog:
     skills_root = repo_root / ".agents" / "skills"
 
     soul = sorted(
-        str(path.parent.relative_to(repo_root))
+        str(path.relative_to(repo_root))
         for path in soul_root.glob("*/SOUL.md")
         if path.is_file()
     )
 
     skills = sorted(
-        str(path.parent.relative_to(repo_root))
+        str(path.relative_to(repo_root))
         for path in skills_root.glob("*/SKILL.md")
         if path.is_file()
     )
