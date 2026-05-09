@@ -30,6 +30,7 @@ def discover_artifacts(repo_root: Path) -> ArtifactCatalog:
 
 
 if __name__ == "__main__":
+    # Script lives in <repo>/python, so parent[1] is repository root.
     catalog = discover_artifacts(Path(__file__).resolve().parents[1])
     print("souls:")
     for soul in catalog.souls:

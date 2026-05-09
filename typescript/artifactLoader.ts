@@ -1,9 +1,10 @@
-declare const require: any;
-declare const module: any;
-declare const process: any;
+type RequireLike = ((id: string) => unknown) & { main?: unknown };
+type ModuleLike = object;
+type ProcessLike = { cwd: () => string };
 
-const { readdirSync, statSync } = require("fs");
-const { join } = require("path");
+declare const require: RequireLike;
+declare const module: ModuleLike;
+declare const process: ProcessLike;
 
 export type ArtifactCatalog = {
   souls: string[];
@@ -15,15 +16,21 @@ type DirEntryLike = {
   isDirectory: () => boolean;
 };
 
+const fs = require("fs") as {
+  readdirSync: (path: string, options: { withFileTypes: boolean }) => DirEntryLike[];
+  statSync: (path: string) => { isFile: () => boolean };
+};
+const path = require("path") as { join: (...parts: string[]) => string };
+
 function collect(parentDir: string, markerFile: string): string[] {
-  const entries = readdirSync(parentDir, { withFileTypes: true }) as DirEntryLike[];
+  const entries = fs.readdirSync(parentDir, { withFileTypes: true });
   return entries
     .filter((entry) => entry.isDirectory())
-    .map((entry) => join(parentDir, entry.name))
+    .map((entry) => path.join(parentDir, entry.name))
     .filter((dirPath: string) => {
-      const marker = join(dirPath, markerFile);
+      const marker = path.join(dirPath, markerFile);
       try {
-        return statSync(marker).isFile();
+        return fs.statSync(marker).isFile();
       } catch {
         return false;
       }
@@ -33,8 +40,8 @@ function collect(parentDir: string, markerFile: string): string[] {
 
 export function discoverArtifacts(repoRoot: string): ArtifactCatalog {
   return {
-    souls: collect(join(repoRoot, "souls"), "SOULS.md").sort(),
-    skills: collect(join(repoRoot, ".agents", "skills"), "SKILL.md").sort(),
+    souls: collect(path.join(repoRoot, "souls"), "SOULS.md").sort(),
+    skills: collect(path.join(repoRoot, ".agents", "skills"), "SKILL.md").sort(),
   };
 }
 
