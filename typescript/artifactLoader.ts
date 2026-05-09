@@ -10,11 +10,16 @@ export type ArtifactCatalog = {
   skills: string[];
 };
 
+type DirEntryLike = {
+  name: string;
+  isDirectory: () => boolean;
+};
+
 function collect(parentDir: string, markerFile: string): string[] {
-  const entries: any[] = readdirSync(parentDir, { withFileTypes: true });
+  const entries = readdirSync(parentDir, { withFileTypes: true }) as DirEntryLike[];
   return entries
-    .filter((entry: any) => entry.isDirectory())
-    .map((entry: any) => join(parentDir, entry.name))
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => join(parentDir, entry.name))
     .filter((dirPath: string) => {
       const marker = join(dirPath, markerFile);
       try {
