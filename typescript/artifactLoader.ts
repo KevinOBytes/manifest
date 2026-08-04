@@ -22,7 +22,7 @@ const fs = require("fs") as {
 };
 const path = require("path") as { join: (...parts: string[]) => string };
 
-function collect(parentDir: string, markerFile: string): string[] {
+function collect(parentDir: string, markerFile: string, repoRoot: string): string[] {
   let entries: DirEntryLike[];
   try {
     entries = fs.readdirSync(parentDir, { withFileTypes: true });
@@ -41,13 +41,13 @@ function collect(parentDir: string, markerFile: string): string[] {
         return false;
       }
     })
-    .map((dirPath: string) => dirPath.replace(/\\/g, "/"));
+    .map((dirPath: string) => path.join(dirPath, markerFile).slice(repoRoot.length).replace(/^[/\\]/, "").replace(/\\/g, "/"));
 }
 
 export function discoverArtifacts(repoRoot: string): ArtifactCatalog {
   return {
-    soul: collect(path.join(repoRoot, "soul"), "SOUL.md").sort(),
-    skills: collect(path.join(repoRoot, ".agents", "skills"), "SKILL.md").sort(),
+    soul: collect(path.join(repoRoot, "soul"), "SOUL.md", repoRoot).sort(),
+    skills: collect(path.join(repoRoot, ".agents", "skills"), "SKILL.md", repoRoot).sort(),
   };
 }
 
